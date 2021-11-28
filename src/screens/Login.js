@@ -5,6 +5,7 @@ import { images } from "../utils/images";
 import { Image, Input, Button } from "../components/Index"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { removeWhitespace, validateEmail } from "../utils/common";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Container = styled.View`
     flex: 1;
