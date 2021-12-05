@@ -6,13 +6,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Image from "../components/Image";
+import { images } from "../utils/images";
 
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.background};
-    padding: 0 20px;
+    padding: 40px 20px;
 `;
 
 const ErrorText = styled.Text`
@@ -31,25 +32,31 @@ const Signup = () => {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [disabled, setDisabled] = useState(true);
+    const [photoUrl, setPhotoUrl] = useState(images.photo);
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
+    const didMountRef = useRef();
 
     useEffect(() => {
-        let _errorMessage = '';
-        if (!name) {
-            _errorMessage = 'Please enter your name.';
-        } else if (!validateEmail(email)) {
-            _errorMessage = 'Please verify your email.';
-        } else if (password.length < 6) {
-            _errorMessage = 'The password must contain 6 characters at least.';
-        } else if (password !== passwordConfirm) {
-            _errorMessage = 'Passwords need to match.';
+        if (didMountRef.current) {
+            let _errorMessage = '';
+            if (!name) {
+                _errorMessage = 'Please enter your name.';
+            } else if (!validateEmail(email)) {
+                _errorMessage = 'Please verify your email.';
+            } else if (password.length < 6) {
+                _errorMessage = 'The password must contain 6 characters at least.';
+            } else if (password !== passwordConfirm) {
+                _errorMessage = 'Passwords need to match.';
+            } else {
+                _errorMessage = '';
+            }
+            setErrorMessage(_errorMessage);
         } else {
-            _errorMessage = '';
+            didMountRef.current = true;
         }
-        setErrorMessage(_errorMessage);
     }, [name, email, password, passwordConfirm]);
 
     useEffect(() => {
@@ -62,11 +69,10 @@ const Signup = () => {
 
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={{ flex: 1 }}
             extraScrollHeight={20}
         >
             <Container>
-                <Image rounded />
+                <Image rounded url={photoUrl} showButton />
 
                 <Input
                     label="Name"
